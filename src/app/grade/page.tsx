@@ -18,20 +18,20 @@ interface Assignment {
 }
 
 interface TestResult {
-  testCase: string;
-  input: any;
+  functionName: string;
+  testIndex: number;
+  input: any[];
   expected: any;
-  actual: any;
+  actual?: any;
   passed: boolean;
   error?: string;
 }
 
 interface GradeResult {
-  studentId: string;
-  week: number;
-  session: number;
   status: 'passed' | 'failed' | 'error';
   score: number;
+  maxScore: number;
+  percentage: number;
   results: TestResult[];
   message?: string;
   error?: string;
@@ -92,7 +92,26 @@ function GradePageContent() {
 
       const data = await res.json();
       if (res.ok) {
-        setResult(data);
+        const submission = data.submission || data;
+        const maxScore = submission.maxScore ?? 0;
+        const score = submission.score ?? 0;
+        const percentage = submission.percentage ?? (maxScore > 0 ? Math.round((score / maxScore) * 100) : 0);
+        const status: GradeResult['status'] =
+          submission.errorMessage || data.error
+            ? 'error'
+            : percentage === 100
+            ? 'passed'
+            : 'failed';
+
+        setResult({
+          status,
+          score,
+          maxScore,
+          percentage,
+          results: submission.results || [],
+          message: data.message,
+          error: data.error
+        });
       } else {
         setError(data.error);
       }
@@ -181,9 +200,11 @@ function GradePageContent() {
             <p className="text-sm text-gray-600">
               Will fetch code from:{' '}
               <code className="bg-gray-200 px-2 py-1 rounded text-xs">
-                github.com/{selectedStudentData.githubUsername}/backend-js-course/week-
-                {String(selectedAssignmentData.week).padStart(2, '0')}/session-
-                {String(selectedAssignmentData.session).padStart(2, '0')}/
+                github.com/{selectedStudentData.githubUsername}/backend-js-course/
+                {selectedAssignmentData.week === 1 && selectedAssignmentData.session === 1
+                  ? 'README.md'
+                  : `week-${String(selectedAssignmentData.week).padStart(2, '0')}/session-${String(selectedAssignmentData.session).padStart(2, '0')}/`
+                }
               </code>
             </p>
             {selectedAssignmentData.functions && (
@@ -238,7 +259,7 @@ function GradePageContent() {
                 )}
               </div>
               <div className="text-right">
-                <p className="text-4xl font-bold">{result.score}%</p>
+                <p className="text-4xl font-bold">{result.percentage}%</p>
                 <p className="text-sm text-gray-500">Score</p>
               </div>
             </div>
@@ -248,7 +269,7 @@ function GradePageContent() {
           <div className="p-6">
             <h3 className="font-medium text-gray-900 mb-4">Test Results</h3>
             <div className="space-y-3">
-              {result.results.map((test, index) => (
+              {(result.results ?? []).map((test, index) => (
                 <div
                   key={index}
                   className={`p-4 rounded-md border ${
@@ -260,7 +281,7 @@ function GradePageContent() {
                   <div className="flex items-start justify-between">
                     <div>
                       <p className="font-medium">
-                        {test.passed ? '✓' : '✗'} {test.testCase}
+                        {test.passed ? '✓' : '✗'} {test.functionName} #{test.testIndex + 1}
                       </p>
                       <div className="mt-2 text-sm space-y-1">
                         <p>

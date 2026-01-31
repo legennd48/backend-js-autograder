@@ -8,6 +8,13 @@
   },
   "assignments": [
     {
+      "week": 1,
+      "session": 1,
+      "title": "Repository Setup",
+      "path": "",
+      "files": []
+    },
+    {
       "week": 2,
       "session": 3,
       "title": "Variables, Data Types & Functions",
