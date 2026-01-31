@@ -1,9 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { connectDB } from '@/lib/mongodb';
 import { Student, Submission } from '@/lib/models';
-import { fetchGitHubFile, checkRepoExists } from '@/lib/github';
+import { checkGitHubPathExists, fetchGitHubFile, checkRepoExists } from '@/lib/github';
 import { gradeAssignment, GradeResult } from '@/lib/grader';
-import { getAssignment, specs } from '@/lib/specs';
+import { getApiAssignment, getAssignment, getRepoCheckAssignment, specs } from '@/lib/specs';
 
 // POST /api/grade - Grade a student's assignment
 export async function POST(request: NextRequest) {
@@ -29,31 +29,6 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Get assignment spec
-    const assignment = getAssignment(week, session);
-    if (!assignment) {
-      return NextResponse.json(
-        { error: `No assignment found for week ${week} session ${session}` },
-        { status: 404 }
-      );
-    }
-
-    // Check repository exists before grading
-    const repoExists = await checkRepoExists(student.githubUsername, specs.course.repoName);
-    if (!repoExists) {
-      submission.status = 'error';
-      submission.errorMessage = `Repository not found: ${student.githubUsername}/${specs.course.repoName}`;
-      submission.score = 0;
-      submission.maxScore = 0;
-      submission.results = [];
-      await submission.save();
-
-      return NextResponse.json(
-        { error: submission.errorMessage, submission },
-        { status: 404 }
-      );
-    }
-
     // Create or update submission record
     let submission = await Submission.findOne({
       studentId,
@@ -74,6 +49,58 @@ export async function POST(request: NextRequest) {
     }
 
     await submission.save();
+
+    // Get assignment spec
+    const repoCheck = getRepoCheckAssignment(week, session);
+    const assignment = getAssignment(week, session);
+    if (!assignment && !repoCheck) {
+      const apiAssignment = getApiAssignment(week, session);
+      if (apiAssignment) {
+        submission.status = 'error';
+        submission.errorMessage = 'This is an API assignment and is not auto-graded yet.';
+        submission.score = 0;
+        submission.maxScore = 0;
+        submission.results = [];
+        await submission.save();
+
+        return NextResponse.json(
+          {
+            error: submission.errorMessage,
+            message: 'API assignment auto-grading is not implemented yet.',
+            submission,
+          },
+          { status: 501 }
+        );
+      }
+
+      submission.status = 'error';
+      submission.errorMessage = `No assignment spec found for week ${week} session ${session}`;
+      submission.score = 0;
+      submission.maxScore = 0;
+      submission.results = [];
+      await submission.save();
+
+      return NextResponse.json(
+        { error: submission.errorMessage, submission },
+        { status: 404 }
+      );
+    }
+
+    // Check repository exists before grading
+    const repoExists = await checkRepoExists(student.githubUsername, specs.course.repoName);
+    if (!repoExists) {
+      submission.status = 'error';
+      submission.errorMessage = `Repository not found: ${student.githubUsername}/${specs.course.repoName}`;
+      submission.score = 0;
+      submission.maxScore = 0;
+      submission.results = [];
+      await submission.save();
+
+      return NextResponse.json(
+        { error: submission.errorMessage, submission },
+        { status: 404 }
+      );
+    }
 
     try {
       let totalScore = 0;
@@ -148,6 +175,53 @@ export async function POST(request: NextRequest) {
             results: allResults
           }
         });
+      }
+      if (repoCheck) {
+        totalMaxScore = repoCheck.checks.length;
+
+        for (let i = 0; i < repoCheck.checks.length; i++) {
+          const check = repoCheck.checks[i];
+          const exists = await checkGitHubPathExists(
+            student.githubUsername,
+            specs.course.repoName,
+            check.path
+          );
+
+          allResults.push({
+            functionName: 'repoCheck',
+            testIndex: i,
+            passed: exists,
+            input: [check.path],
+            expected: true,
+            actual: exists,
+            error: exists ? undefined : `Missing required path: ${check.path}`
+          });
+
+          if (exists) totalScore++;
+        }
+
+        submission.status = 'completed';
+        submission.score = totalScore;
+        submission.maxScore = totalMaxScore;
+        submission.results = allResults;
+        await submission.save();
+
+        return NextResponse.json({
+          message: 'Grading complete',
+          submission: {
+            id: submission._id,
+            week,
+            session,
+            score: totalScore,
+            maxScore: totalMaxScore,
+            percentage: totalMaxScore > 0 ? Math.round((totalScore / totalMaxScore) * 100) : 0,
+            results: allResults
+          }
+        });
+      }
+
+      if (!assignment) {
+        throw new Error(`No function assignment spec found for week ${week} session ${session}`);
       }
 
       // Process each file in the assignment
@@ -235,6 +309,7 @@ export async function GET(request: NextRequest) {
     const studentId = searchParams.get('studentId');
     const week = searchParams.get('week');
     const session = searchParams.get('session');
+    const status = searchParams.get('status');
 
     const filter: Record<string, any> = {};
     
@@ -244,9 +319,31 @@ export async function GET(request: NextRequest) {
 
     const submissions = await Submission.find(filter)
       .populate('studentId', 'name email githubUsername')
-      .sort({ submittedAt: -1 });
+      .sort({ submittedAt: -1 })
+      .lean();
 
-    return NextResponse.json(submissions);
+    const normalized = submissions.map((s: any) => {
+      const maxScore = Number(s.maxScore || 0);
+      const score = Number(s.score || 0);
+      const percentage = maxScore > 0 ? Math.round((score / maxScore) * 100) : 0;
+
+      let derivedStatus: 'passed' | 'failed' | 'error' = 'failed';
+      if (s.status === 'error') derivedStatus = 'error';
+      else if (s.status !== 'completed') derivedStatus = 'error';
+      else derivedStatus = percentage === 100 ? 'passed' : 'failed';
+
+      return {
+        ...s,
+        percentage,
+        status: derivedStatus
+      };
+    });
+
+    const filtered = status
+      ? normalized.filter((s: any) => s.status === status)
+      : normalized;
+
+    return NextResponse.json(filtered);
   } catch (error: any) {
     return NextResponse.json(
       { error: error.message || 'Failed to fetch submissions' },

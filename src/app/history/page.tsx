@@ -13,6 +13,8 @@ interface Submission {
   session: number;
   status: 'passed' | 'failed' | 'error';
   score: number;
+  maxScore: number;
+  percentage: number;
   gradedAt: string;
 }
 
@@ -53,7 +55,7 @@ export default function HistoryPage() {
   const totalSubmissions = submissions.length;
   const passedCount = submissions.filter(s => s.status === 'passed').length;
   const avgScore = submissions.length > 0
-    ? Math.round(submissions.reduce((sum, s) => sum + s.score, 0) / submissions.length)
+    ? Math.round(submissions.reduce((sum, s) => sum + (s.percentage || 0), 0) / submissions.length)
     : 0;
 
   if (loading) {
@@ -198,14 +200,14 @@ export default function HistoryPage() {
                       <div className="w-16 bg-gray-200 rounded-full h-2 mr-2">
                         <div
                           className={`h-2 rounded-full ${
-                            submission.score >= 80 ? 'bg-green-500' :
-                            submission.score >= 60 ? 'bg-yellow-500' :
+                              (submission.percentage || 0) >= 80 ? 'bg-green-500' :
+                              (submission.percentage || 0) >= 60 ? 'bg-yellow-500' :
                             'bg-red-500'
                           }`}
-                          style={{ width: `${submission.score}%` }}
+                            style={{ width: `${submission.percentage || 0}%` }}
                         ></div>
                       </div>
-                      <span className="text-sm text-gray-900">{submission.score}%</span>
+                        <span className="text-sm text-gray-900">{submission.percentage || 0}%</span>
                     </div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">

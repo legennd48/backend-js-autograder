@@ -2,7 +2,7 @@ import { VM } from 'vm2';
 
 export interface TestCase {
   input: any[];
-  expected: any;
+  expected?: any;
   throws?: string;
   tolerance?: number;
   deepEqual?: boolean;
@@ -42,6 +42,38 @@ export function executeInSandbox(
       eval: false,
       wasm: false,
     });
+
+    // Special-case: some specs represent a callback as a string like "() => 5".
+    // We cannot eval inside the sandbox (eval is disabled). Instead, embed the
+    // function literal directly in the VM code.
+    if (
+      functionName === 'trySafely' &&
+      Array.isArray(args) &&
+      args.length === 1 &&
+      typeof args[0] === 'string'
+    ) {
+      const fnExpr = args[0].trim();
+      const looksLikeFunction = fnExpr.startsWith('function') || fnExpr.includes('=>');
+      if (!looksLikeFunction) {
+        return { error: 'Invalid function expression' };
+      }
+
+      const invocationCode = `
+        const module = { exports: {} };
+        const exports = module.exports;
+
+        ${code}
+
+        const __fn = (${fnExpr});
+        if (!module.exports || typeof module.exports['${functionName}'] !== 'function') {
+          throw new Error("Function '${functionName}' not found or not exported");
+        }
+        module.exports['${functionName}'](__fn);
+      `;
+
+      const result = vm.run(invocationCode);
+      return { result };
+    }
 
     // Wrap code to extract the function
     const wrappedCode = `
@@ -128,14 +160,18 @@ function valuesEqual(actual: any, expected: any, options?: { tolerance?: number;
 /**
  * Check if value matches expected shape
  */
-function matchesShape(value: any, shape: Record<string, string>): boolean {
+function matchesShape(value: any, shape: Record<string, any>): boolean {
   if (typeof value !== 'object' || value === null) return false;
   
-  for (const [key, expectedType] of Object.entries(shape)) {
+  for (const [key, expected] of Object.entries(shape)) {
     if (!(key in value)) return false;
     
-    const actualType = Array.isArray(value[key]) ? 'array' : typeof value[key];
-    if (actualType !== expectedType) return false;
+    if (typeof expected === 'string') {
+      const actualType = Array.isArray(value[key]) ? 'array' : typeof value[key];
+      if (actualType !== expected) return false;
+    } else {
+      if (value[key] !== expected) return false;
+    }
   }
   
   return true;

@@ -58,6 +58,18 @@ export interface ApiAssignmentSpec {
   endpoints: EndpointSpec[];
 }
 
+export interface RepoCheckSpec {
+  label: string;
+  path: string;
+}
+
+export interface RepoCheckAssignmentSpec {
+  week: number;
+  session: number;
+  title: string;
+  checks: RepoCheckSpec[];
+}
+
 export interface CourseSpecs {
   course: {
     name: string;
@@ -67,6 +79,7 @@ export interface CourseSpecs {
     repoName: string;
   };
   assignments: AssignmentSpec[];
+  repoCheckAssignments?: RepoCheckAssignmentSpec[];
   apiAssignments: ApiAssignmentSpec[];
   grading: {
     functionTests: {
@@ -99,6 +112,16 @@ export function getApiAssignment(week: number, session: number): ApiAssignmentSp
 }
 
 /**
+ * Get repo-check assignment spec for a specific week/session
+ */
+export function getRepoCheckAssignment(
+  week: number,
+  session: number
+): RepoCheckAssignmentSpec | undefined {
+  return (specs.repoCheckAssignments || []).find(a => a.week === week && a.session === session);
+}
+
+/**
  * Get all assignments for a week
  */
 export function getWeekAssignments(week: number): AssignmentSpec[] {
@@ -108,12 +131,24 @@ export function getWeekAssignments(week: number): AssignmentSpec[] {
 /**
  * List all available assignments
  */
-export function listAssignments(): Array<{ week: number; session: number; title: string; type: 'function' | 'api' }> {
+export function listAssignments(): Array<{
+  week: number;
+  session: number;
+  title: string;
+  type: 'function' | 'repo-check' | 'api';
+}> {
   const functionAssignments = (specs.assignments || []).map(a => ({
     week: a.week,
     session: a.session,
     title: a.title,
     type: 'function' as const
+  }));
+
+  const repoCheckAssignments = (specs.repoCheckAssignments || []).map(a => ({
+    week: a.week,
+    session: a.session,
+    title: a.title,
+    type: 'repo-check' as const
   }));
 
   const apiAssignments = (specs.apiAssignments || []).map(a => ({
@@ -123,7 +158,7 @@ export function listAssignments(): Array<{ week: number; session: number; title:
     type: 'api' as const
   }));
 
-  return [...functionAssignments, ...apiAssignments].sort((a, b) => {
+  return [...functionAssignments, ...repoCheckAssignments, ...apiAssignments].sort((a, b) => {
     if (a.week !== b.week) return a.week - b.week;
     return a.session - b.session;
   });

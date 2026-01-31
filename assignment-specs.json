@@ -894,6 +894,129 @@
       ]
     }
   ],
+  "repoCheckAssignments": [
+    {
+      "week": 1,
+      "session": 2,
+      "title": "Git & GitHub Basics",
+      "checks": [
+        { "label": ".gitignore exists", "path": ".gitignore" },
+        { "label": "README exists", "path": "README.md" }
+      ]
+    },
+    {
+      "week": 6,
+      "session": 11,
+      "title": "Introduction to HTTP & JSON APIs",
+      "checks": [
+        { "label": "http-client.js exists", "path": "week-06/session-11/http-client.js" }
+      ]
+    },
+    {
+      "week": 7,
+      "session": 13,
+      "title": "Express Middleware & Validation",
+      "checks": [
+        { "label": "package.json exists", "path": "week-07/session-13/package.json" },
+        { "label": "server.js exists", "path": "week-07/session-13/server.js" },
+        { "label": "logger middleware exists", "path": "week-07/session-13/middleware/logger.js" },
+        { "label": "auth middleware exists", "path": "week-07/session-13/middleware/auth.js" },
+        { "label": "validate middleware exists", "path": "week-07/session-13/middleware/validate.js" },
+        { "label": "errorHandler middleware exists", "path": "week-07/session-13/middleware/errorHandler.js" },
+        { "label": "users route exists", "path": "week-07/session-13/routes/users.js" }
+      ]
+    },
+    {
+      "week": 7,
+      "session": 14,
+      "title": "Environment Variables & Configuration",
+      "checks": [
+        { "label": "package.json exists", "path": "week-07/session-14/package.json" },
+        { "label": ".env.example exists", "path": "week-07/session-14/.env.example" },
+        { "label": ".gitignore exists", "path": "week-07/session-14/.gitignore" },
+        { "label": "config module exists", "path": "week-07/session-14/config/index.js" },
+        { "label": "server.js exists", "path": "week-07/session-14/server.js" }
+      ]
+    },
+    {
+      "week": 8,
+      "session": 15,
+      "title": "MongoDB Intro",
+      "checks": [
+        { "label": "package.json exists", "path": "week-08/session-15/package.json" },
+        { "label": "server.js exists", "path": "week-08/session-15/server.js" },
+        { "label": "db connection exists", "path": "week-08/session-15/db/connection.js" }
+      ]
+    },
+    {
+      "week": 9,
+      "session": 17,
+      "title": "Relationships",
+      "checks": [
+        { "label": "package.json exists", "path": "week-09/session-17/package.json" },
+        { "label": "server.js exists", "path": "week-09/session-17/server.js" },
+        { "label": "db connection exists", "path": "week-09/session-17/db/connection.js" },
+        { "label": "User model exists", "path": "week-09/session-17/models/User.js" },
+        { "label": "Post model exists", "path": "week-09/session-17/models/Post.js" },
+        { "label": "Comment model exists", "path": "week-09/session-17/models/Comment.js" }
+      ]
+    },
+    {
+      "week": 10,
+      "session": 20,
+      "title": "File Uploads",
+      "checks": [
+        { "label": "package.json exists", "path": "week-10/session-20/package.json" },
+        { "label": "server.js exists", "path": "week-10/session-20/server.js" },
+        { "label": "auth middleware exists", "path": "week-10/session-20/middleware/auth.js" },
+        { "label": "upload middleware exists", "path": "week-10/session-20/middleware/upload.js" },
+        { "label": "User model exists", "path": "week-10/session-20/models/User.js" }
+      ]
+    },
+    {
+      "week": 11,
+      "session": 21,
+      "title": "Testing",
+      "checks": [
+        { "label": "package.json exists", "path": "week-11/session-21/package.json" },
+        { "label": "server.js exists", "path": "week-11/session-21/server.js" },
+        { "label": "app.js exists", "path": "week-11/session-21/app.js" },
+        { "label": "db connection exists", "path": "week-11/session-21/db/connection.js" },
+        { "label": "User model exists", "path": "week-11/session-21/models/User.js" },
+        { "label": "validators util exists", "path": "week-11/session-21/utils/validators.js" },
+        { "label": "helpers util exists", "path": "week-11/session-21/utils/helpers.js" },
+        { "label": "validators unit test exists", "path": "week-11/session-21/__tests__/unit/validators.test.js" },
+        { "label": "helpers unit test exists", "path": "week-11/session-21/__tests__/unit/helpers.test.js" },
+        { "label": "users integration test exists", "path": "week-11/session-21/__tests__/integration/users.test.js" }
+      ]
+    },
+    {
+      "week": 11,
+      "session": 22,
+      "title": "Documentation",
+      "checks": [
+        { "label": "package.json exists", "path": "week-11/session-22/package.json" },
+        { "label": "server.js exists", "path": "week-11/session-22/server.js" },
+        { "label": "swagger.js exists", "path": "week-11/session-22/swagger.js" },
+        { "label": "swagger.json exists", "path": "week-11/session-22/docs/swagger.json" }
+      ]
+    },
+    {
+      "week": 12,
+      "session": 23,
+      "title": "Deployment",
+      "checks": [
+        { "label": "package.json exists", "path": "week-12/session-23/package.json" },
+        { "label": ".env.example exists", "path": "week-12/session-23/.env.example" },
+        { "label": ".gitignore exists", "path": "week-12/session-23/.gitignore" },
+        { "label": "server.js exists", "path": "week-12/session-23/server.js" },
+        { "label": "config module exists", "path": "week-12/session-23/config/index.js" },
+        { "label": "db connection exists", "path": "week-12/session-23/db/connection.js" },
+        { "label": "User model exists", "path": "week-12/session-23/models/User.js" },
+        { "label": "users route exists", "path": "week-12/session-23/routes/users.js" }
+      ]
+    }
+  ],
   "apiAssignments": [
     {
       "week": 6,

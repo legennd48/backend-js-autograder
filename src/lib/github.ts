@@ -78,6 +78,34 @@ export async function checkRepoExists(
 }
 
 /**
+ * Check if a path (file or directory) exists in a GitHub repository.
+ * Uses the Contents API and only checks status codes (no base64 decoding).
+ */
+export async function checkGitHubPathExists(
+  username: string,
+  repo: string,
+  path: string
+): Promise<boolean> {
+  const url = `https://api.github.com/repos/${username}/${repo}/contents/${path}`;
+
+  const headers: Record<string, string> = {
+    'Accept': 'application/vnd.github.v3+json',
+    'User-Agent': 'BackendJS-AutoGrader'
+  };
+
+  if (GITHUB_TOKEN) {
+    headers['Authorization'] = `Bearer ${GITHUB_TOKEN}`;
+  }
+
+  const response = await fetch(url, { headers });
+  if (response.status === 404) return false;
+  if (!response.ok) {
+    throw new Error(`GitHub API error: ${response.status} ${response.statusText}`);
+  }
+  return true;
+}
+
+/**
  * Get rate limit info
  */
 export async function getRateLimitInfo(): Promise<{

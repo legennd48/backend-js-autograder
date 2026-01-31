@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getAssignment, getApiAssignment, specs } from '@/lib/specs';
+import { getAssignment, getApiAssignment, getRepoCheckAssignment, specs } from '@/lib/specs';
 
 interface RouteParams {
   params: Promise<{ weekSession: string }>;
@@ -48,6 +48,17 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
         type: 'api',
         repoName: specs.course.repoName,
         ...apiAssignment
+      });
+    }
+
+    // Try repo-check assignment
+    const repoCheckAssignment = getRepoCheckAssignment(week, session);
+
+    if (repoCheckAssignment) {
+      return NextResponse.json({
+        type: 'repo-check',
+        repoName: specs.course.repoName,
+        ...repoCheckAssignment
       });
     }
 

@@ -37,6 +37,20 @@ interface GradeResult {
   error?: string;
 }
 
+interface PreviewCheck {
+  label: string;
+  path: string;
+  exists: boolean;
+}
+
+interface PreviewInfo {
+  owner: string;
+  repoName: string;
+  repoExists: boolean;
+  durationMs: number;
+  checks: PreviewCheck[];
+}
+
 function GradePageContent() {
   const searchParams = useSearchParams();
   const preselectedStudent = searchParams.get('student');
@@ -49,6 +63,10 @@ function GradePageContent() {
   const [grading, setGrading] = useState(false);
   const [result, setResult] = useState<GradeResult | null>(null);
   const [error, setError] = useState('');
+
+  const [previewLoading, setPreviewLoading] = useState(false);
+  const [previewError, setPreviewError] = useState('');
+  const [preview, setPreview] = useState<PreviewInfo | null>(null);
 
   useEffect(() => {
     const load = async () => {
@@ -103,6 +121,66 @@ function GradePageContent() {
     void load();
   }, [preselectedStudent]);
 
+  useEffect(() => {
+    if (!selectedStudent || !selectedAssignment) {
+      setPreview(null);
+      setPreviewError('');
+      setPreviewLoading(false);
+      return;
+    }
+
+    const [week, session] = selectedAssignment.split('-').map(Number);
+    if (!week || !session) return;
+
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 12_000);
+
+    const run = async () => {
+      setPreviewLoading(true);
+      setPreviewError('');
+
+      try {
+        const res = await fetch('/api/preview', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          signal: controller.signal,
+          body: JSON.stringify({
+            studentId: selectedStudent,
+            week,
+            session
+          })
+        });
+
+        const data = await res.json();
+
+        if (!res.ok) {
+          setPreview(null);
+          setPreviewError(data?.error || 'Preview check failed');
+          return;
+        }
+
+        setPreview(data?.preview || null);
+      } catch (e: any) {
+        setPreview(null);
+        if (e?.name === 'AbortError') {
+          setPreviewError('Preview timed out (GitHub is slow). Try again.');
+        } else {
+          setPreviewError('Preview failed to load');
+        }
+      } finally {
+        clearTimeout(timeout);
+        setPreviewLoading(false);
+      }
+    };
+
+    void run();
+
+    return () => {
+      clearTimeout(timeout);
+      controller.abort();
+    };
+  }, [selectedStudent, selectedAssignment]);
+
   const handleGrade = async () => {
     if (!selectedStudent || !selectedAssignment) {
       setError('Please select a student and assignment');
@@ -127,7 +205,8 @@ function GradePageContent() {
       });
 
       const data = await res.json();
-      if (res.ok) {
+      // Even for non-2xx errors, the API may return a submission with details.
+      if (res.ok || data?.submission) {
         const submission = data.submission || data;
         const maxScore = submission.maxScore ?? 0;
         const score = submission.score ?? 0;
@@ -149,7 +228,7 @@ function GradePageContent() {
           error: data.error
         });
       } else {
-        setError(data.error);
+        setError(data?.error || 'Grading failed');
       }
     } catch (err) {
       setError('Failed to grade assignment');
@@ -243,6 +322,33 @@ function GradePageContent() {
                 }
               </code>
             </p>
+
+            <div className="mt-3 text-sm">
+              {previewLoading ? (
+                <p className="text-gray-600">Checking GitHub…</p>
+              ) : previewError ? (
+                <p className="text-red-700">{previewError}</p>
+              ) : preview ? (
+                <div className="space-y-1">
+                  <p className="text-gray-600">
+                    Preview check took <span className="font-medium">{preview.durationMs}ms</span>
+                  </p>
+                  {preview.checks.length > 0 && (
+                    <ul className="list-disc pl-5 text-gray-700">
+                      {preview.checks.map((c) => (
+                        <li key={`${c.label}:${c.path}`}>
+                          {c.label}: <span className="font-mono text-xs">{c.path}</span>{' '}
+                          <span className={c.exists ? 'text-green-700' : 'text-red-700'}>
+                            ({c.exists ? 'found' : 'missing'})
+                          </span>
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+                </div>
+              ) : null}
+            </div>
+
             {selectedAssignmentData.functions && (
               <p className="text-sm text-gray-600 mt-2">
                 Testing functions:{' '}
