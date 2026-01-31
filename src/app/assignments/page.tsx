@@ -16,6 +16,7 @@ interface Assignment {
   title: string;
   description: string;
   file: string;
+  type?: 'function' | 'repo-check' | 'api';
   functions?: FunctionSpec[];
   endpoints?: {
     method: string;
@@ -23,6 +24,30 @@ interface Assignment {
     description: string;
     testCases: any[];
   }[];
+  checks?: { label: string; path: string }[];
+}
+
+interface BatchGradeResult {
+  studentId: string;
+  studentName: string;
+  githubUsername: string;
+  status: 'passed' | 'failed' | 'error' | 'not-submitted';
+  score: number;
+  maxScore: number;
+  percentage: number;
+  errorMessage?: string;
+}
+
+interface BatchGradeResponse {
+  message: string;
+  summary: {
+    total: number;
+    passed: number;
+    failed: number;
+    notSubmitted: number;
+    errors: number;
+  };
+  results: BatchGradeResult[];
 }
 
 export default function AssignmentsPage() {
@@ -31,6 +56,8 @@ export default function AssignmentsPage() {
   const [error, setError] = useState('');
   const [selectedAssignment, setSelectedAssignment] = useState<Assignment | null>(null);
   const [loadingDetails, setLoadingDetails] = useState(false);
+  const [batchGrading, setBatchGrading] = useState(false);
+  const [batchResults, setBatchResults] = useState<BatchGradeResponse | null>(null);
 
   useEffect(() => {
     fetchAssignments();
@@ -54,6 +81,7 @@ export default function AssignmentsPage() {
 
   const viewDetails = async (week: number, session: number) => {
     setLoadingDetails(true);
+    setBatchResults(null);
     try {
       const res = await fetch(`/api/assignments/${week}-${session}`);
       const data = await res.json();
@@ -66,6 +94,36 @@ export default function AssignmentsPage() {
       setError('Failed to fetch assignment details');
     } finally {
       setLoadingDetails(false);
+    }
+  };
+
+  const gradeAllStudents = async () => {
+    if (!selectedAssignment) return;
+    
+    setBatchGrading(true);
+    setBatchResults(null);
+    setError('');
+
+    try {
+      const res = await fetch('/api/grade/batch', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          week: selectedAssignment.week,
+          session: selectedAssignment.session
+        })
+      });
+      const data = await res.json();
+
+      if (res.ok) {
+        setBatchResults(data);
+      } else {
+        setError(data.error || 'Batch grading failed');
+      }
+    } catch (err) {
+      setError('Failed to grade assignment');
+    } finally {
+      setBatchGrading(false);
     }
   };
 
@@ -281,13 +339,89 @@ export default function AssignmentsPage() {
                   </div>
                 )}
 
-                <div className="border-t pt-4">
-                  <a
-                    href={`/grade?assignment=${selectedAssignment.week}-${selectedAssignment.session}`}
-                    className="w-full inline-flex justify-center items-center px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700"
+                <div className="border-t pt-4 space-y-4">
+                  <button
+                    onClick={gradeAllStudents}
+                    disabled={batchGrading}
+                    className="w-full inline-flex justify-center items-center px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed"
                   >
-                    Grade This Assignment
-                  </a>
+                    {batchGrading ? (
+                      <>
+                        <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" fill="none" viewBox="0 0 24 24">
+                          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                        </svg>
+                        Grading All Students...
+                      </>
+                    ) : (
+                      'Grade All Students'
+                    )}
+                  </button>
+
+                  {/* Batch grading results */}
+                  {batchResults && (
+                    <div className="space-y-3">
+                      {/* Summary */}
+                      <div className="grid grid-cols-4 gap-2 text-center text-xs">
+                        <div className="bg-gray-100 rounded p-2">
+                          <div className="text-lg font-bold text-gray-700">{batchResults.summary.total}</div>
+                          <div className="text-gray-500">Total</div>
+                        </div>
+                        <div className="bg-green-100 rounded p-2">
+                          <div className="text-lg font-bold text-green-700">{batchResults.summary.passed}</div>
+                          <div className="text-green-600">Passed</div>
+                        </div>
+                        <div className="bg-yellow-100 rounded p-2">
+                          <div className="text-lg font-bold text-yellow-700">{batchResults.summary.failed}</div>
+                          <div className="text-yellow-600">Failed</div>
+                        </div>
+                        <div className="bg-gray-100 rounded p-2">
+                          <div className="text-lg font-bold text-gray-500">{batchResults.summary.notSubmitted}</div>
+                          <div className="text-gray-500">Not Submitted</div>
+                        </div>
+                      </div>
+
+                      {/* Individual results */}
+                      <div className="max-h-64 overflow-y-auto space-y-1">
+                        {batchResults.results.map((result) => (
+                          <div
+                            key={result.studentId}
+                            className={`flex items-center justify-between p-2 rounded text-sm ${
+                              result.status === 'passed' ? 'bg-green-50' :
+                              result.status === 'failed' ? 'bg-yellow-50' :
+                              result.status === 'not-submitted' ? 'bg-gray-50' :
+                              'bg-red-50'
+                            }`}
+                          >
+                            <div className="flex-1 min-w-0">
+                              <div className="font-medium text-gray-900 truncate">{result.studentName}</div>
+                              <div className="text-xs text-gray-500">@{result.githubUsername}</div>
+                            </div>
+                            <div className="flex items-center space-x-2 ml-2">
+                              {result.status === 'not-submitted' ? (
+                                <span className="text-xs text-gray-500 bg-gray-200 px-2 py-0.5 rounded">
+                                  Not Submitted
+                                </span>
+                              ) : result.status === 'error' ? (
+                                <span className="text-xs text-red-600 bg-red-100 px-2 py-0.5 rounded" title={result.errorMessage}>
+                                  Error
+                                </span>
+                              ) : (
+                                <>
+                                  <span className="text-xs text-gray-600">{result.score}/{result.maxScore}</span>
+                                  <span className={`text-xs font-medium px-2 py-0.5 rounded ${
+                                    result.status === 'passed' ? 'bg-green-200 text-green-800' : 'bg-yellow-200 text-yellow-800'
+                                  }`}>
+                                    {result.percentage}%
+                                  </span>
+                                </>
+                              )}
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
                 </div>
               </div>
             ) : (

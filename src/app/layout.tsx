@@ -31,6 +31,9 @@ export default function RootLayout({
                   <a href="/assignments" className="text-gray-600 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium">
                     Assignments
                   </a>
+                  <a href="/grades" className="text-gray-600 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium">
+                    Grade Book
+                  </a>
                   <a href="/grade" className="text-gray-600 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium">
                     Grade
                   </a>

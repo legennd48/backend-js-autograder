@@ -335,7 +335,8 @@ export async function GET(request: NextRequest) {
       return {
         ...s,
         percentage,
-        status: derivedStatus
+        status: derivedStatus,
+        gradedAt: s.submittedAt || s.createdAt || new Date()
       };
     });
 
