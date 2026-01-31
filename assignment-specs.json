@@ -1,0 +1,1044 @@
+{
+  "course": {
+    "name": "Backend JavaScript Development",
+    "weeks": 12,
+    "sessionsPerWeek": 2,
+    "totalSessions": 24,
+    "repoName": "backend-js-course"
+  },
+  "assignments": [
+    {
+      "week": 2,
+      "session": 3,
+      "title": "Variables, Data Types & Functions",
+      "path": "week-02/session-03",
+      "files": [
+        {
+          "filename": "functions.js",
+          "functions": [
+            {
+              "name": "greetUser",
+              "description": "Return greeting message with name",
+              "params": [{ "name": "name", "type": "string" }],
+              "returns": "string",
+              "tests": [
+                { "input": ["Alice"], "expected": "Hello, Alice!" },
+                { "input": ["Bob"], "expected": "Hello, Bob!" },
+                { "input": [""], "expected": "Hello, !" }
+              ]
+            },
+            {
+              "name": "calculateArea",
+              "description": "Calculate rectangle area",
+              "params": [
+                { "name": "width", "type": "number" },
+                { "name": "height", "type": "number" }
+              ],
+              "returns": "number",
+              "tests": [
+                { "input": [5, 3], "expected": 15 },
+                { "input": [10, 10], "expected": 100 },
+                { "input": [0, 5], "expected": 0 }
+              ]
+            },
+            {
+              "name": "isAdult",
+              "description": "Check if age >= 18",
+              "params": [{ "name": "age", "type": "number" }],
+              "returns": "boolean",
+              "tests": [
+                { "input": [18], "expected": true },
+                { "input": [21], "expected": true },
+                { "input": [17], "expected": false },
+                { "input": [0], "expected": false }
+              ]
+            },
+            {
+              "name": "getFullName",
+              "description": "Combine first and last name",
+              "params": [
+                { "name": "firstName", "type": "string" },
+                { "name": "lastName", "type": "string" }
+              ],
+              "returns": "string",
+              "tests": [
+                { "input": ["John", "Doe"], "expected": "John Doe" },
+                { "input": ["Jane", "Smith"], "expected": "Jane Smith" }
+              ]
+            },
+            {
+              "name": "convertToCelsius",
+              "description": "Convert Fahrenheit to Celsius",
+              "params": [{ "name": "fahrenheit", "type": "number" }],
+              "returns": "number",
+              "tests": [
+                { "input": [32], "expected": 0 },
+                { "input": [212], "expected": 100 },
+                { "input": [98.6], "expected": 37, "tolerance": 0.1 }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "week": 2,
+      "session": 4,
+      "title": "Control Flow",
+      "path": "week-02/session-04",
+      "files": [
+        {
+          "filename": "control-flow.js",
+          "functions": [
+            {
+              "name": "getGrade",
+              "description": "Return letter grade for score",
+              "params": [{ "name": "score", "type": "number" }],
+              "returns": "string",
+              "tests": [
+                { "input": [95], "expected": "A" },
+                { "input": [85], "expected": "B" },
+                { "input": [75], "expected": "C" },
+                { "input": [65], "expected": "D" },
+                { "input": [50], "expected": "F" }
+              ]
+            },
+            {
+              "name": "isEven",
+              "description": "Check if number is even",
+              "params": [{ "name": "num", "type": "number" }],
+              "returns": "boolean",
+              "tests": [
+                { "input": [4], "expected": true },
+                { "input": [7], "expected": false },
+                { "input": [0], "expected": true }
+              ]
+            },
+            {
+              "name": "getAbsoluteValue",
+              "description": "Return absolute value",
+              "params": [{ "name": "num", "type": "number" }],
+              "returns": "number",
+              "tests": [
+                { "input": [-5], "expected": 5 },
+                { "input": [5], "expected": 5 },
+                { "input": [0], "expected": 0 }
+              ]
+            },
+            {
+              "name": "canVote",
+              "description": "Check if can vote (age >= 18 and citizen)",
+              "params": [
+                { "name": "age", "type": "number" },
+                { "name": "isCitizen", "type": "boolean" }
+              ],
+              "returns": "boolean",
+              "tests": [
+                { "input": [20, true], "expected": true },
+                { "input": [20, false], "expected": false },
+                { "input": [16, true], "expected": false }
+              ]
+            },
+            {
+              "name": "getDayType",
+              "description": "Return 'Weekend' or 'Weekday'",
+              "params": [{ "name": "day", "type": "string" }],
+              "returns": "string",
+              "tests": [
+                { "input": ["Saturday"], "expected": "Weekend" },
+                { "input": ["Sunday"], "expected": "Weekend" },
+                { "input": ["Monday"], "expected": "Weekday" },
+                { "input": ["Friday"], "expected": "Weekday" }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "week": 3,
+      "session": 5,
+      "title": "Loops",
+      "path": "week-03/session-05",
+      "files": [
+        {
+          "filename": "loops.js",
+          "functions": [
+            {
+              "name": "sumNumbers",
+              "description": "Sum numbers from 1 to n",
+              "params": [{ "name": "n", "type": "number" }],
+              "returns": "number",
+              "tests": [
+                { "input": [5], "expected": 15 },
+                { "input": [10], "expected": 55 },
+                { "input": [1], "expected": 1 },
+                { "input": [0], "expected": 0 }
+              ]
+            },
+            {
+              "name": "factorial",
+              "description": "Calculate n factorial",
+              "params": [{ "name": "n", "type": "number" }],
+              "returns": "number",
+              "tests": [
+                { "input": [5], "expected": 120 },
+                { "input": [0], "expected": 1 },
+                { "input": [1], "expected": 1 },
+                { "input": [7], "expected": 5040 }
+              ]
+            },
+            {
+              "name": "countVowels",
+              "description": "Count vowels in string",
+              "params": [{ "name": "str", "type": "string" }],
+              "returns": "number",
+              "tests": [
+                { "input": ["hello"], "expected": 2 },
+                { "input": ["WORLD"], "expected": 1 },
+                { "input": ["aeiou"], "expected": 5 },
+                { "input": ["xyz"], "expected": 0 }
+              ]
+            },
+            {
+              "name": "reverseString",
+              "description": "Reverse a string",
+              "params": [{ "name": "str", "type": "string" }],
+              "returns": "string",
+              "tests": [
+                { "input": ["hello"], "expected": "olleh" },
+                { "input": ["abc"], "expected": "cba" },
+                { "input": [""], "expected": "" }
+              ]
+            },
+            {
+              "name": "isPalindrome",
+              "description": "Check if string is palindrome",
+              "params": [{ "name": "str", "type": "string" }],
+              "returns": "boolean",
+              "tests": [
+                { "input": ["racecar"], "expected": true },
+                { "input": ["hello"], "expected": false },
+                { "input": ["madam"], "expected": true },
+                { "input": [""], "expected": true }
+              ]
+            },
+            {
+              "name": "fizzBuzz",
+              "description": "Return FizzBuzz result for n",
+              "params": [{ "name": "n", "type": "number" }],
+              "returns": "string|number",
+              "tests": [
+                { "input": [3], "expected": "Fizz" },
+                { "input": [5], "expected": "Buzz" },
+                { "input": [15], "expected": "FizzBuzz" },
+                { "input": [7], "expected": 7 }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "week": 3,
+      "session": 6,
+      "title": "Arrays",
+      "path": "week-03/session-06",
+      "files": [
+        {
+          "filename": "arrays.js",
+          "functions": [
+            {
+              "name": "getFirst",
+              "description": "Return first element",
+              "params": [{ "name": "arr", "type": "array" }],
+              "returns": "any",
+              "tests": [
+                { "input": [[1, 2, 3]], "expected": 1 },
+                { "input": [["a", "b"]], "expected": "a" },
+                { "input": [[]], "expected": null }
+              ]
+            },
+            {
+              "name": "getLast",
+              "description": "Return last element",
+              "params": [{ "name": "arr", "type": "array" }],
+              "returns": "any",
+              "tests": [
+                { "input": [[1, 2, 3]], "expected": 3 },
+                { "input": [["a", "b"]], "expected": "b" },
+                { "input": [[]], "expected": null }
+              ]
+            },
+            {
+              "name": "sumArray",
+              "description": "Sum all numbers in array",
+              "params": [{ "name": "arr", "type": "array" }],
+              "returns": "number",
+              "tests": [
+                { "input": [[1, 2, 3, 4, 5]], "expected": 15 },
+                { "input": [[10, 20]], "expected": 30 },
+                { "input": [[]], "expected": 0 }
+              ]
+            },
+            {
+              "name": "findMax",
+              "description": "Find maximum value",
+              "params": [{ "name": "arr", "type": "array" }],
+              "returns": "number|null",
+              "tests": [
+                { "input": [[1, 5, 3, 9, 2]], "expected": 9 },
+                { "input": [[-5, -1, -10]], "expected": -1 },
+                { "input": [[]], "expected": null }
+              ]
+            },
+            {
+              "name": "findMin",
+              "description": "Find minimum value",
+              "params": [{ "name": "arr", "type": "array" }],
+              "returns": "number|null",
+              "tests": [
+                { "input": [[1, 5, 3, 9, 2]], "expected": 1 },
+                { "input": [[-5, -1, -10]], "expected": -10 },
+                { "input": [[]], "expected": null }
+              ]
+            },
+            {
+              "name": "removeDuplicates",
+              "description": "Remove duplicate values",
+              "params": [{ "name": "arr", "type": "array" }],
+              "returns": "array",
+              "tests": [
+                { "input": [[1, 2, 2, 3, 3, 3]], "expected": [1, 2, 3] },
+                { "input": [["a", "b", "a"]], "expected": ["a", "b"] },
+                { "input": [[]], "expected": [] }
+              ]
+            },
+            {
+              "name": "countOccurrences",
+              "description": "Count occurrences of value",
+              "params": [
+                { "name": "arr", "type": "array" },
+                { "name": "value", "type": "any" }
+              ],
+              "returns": "number",
+              "tests": [
+                { "input": [[1, 2, 2, 3, 2], 2], "expected": 3 },
+                { "input": [["a", "b", "a"], "a"], "expected": 2 },
+                { "input": [[1, 2, 3], 5], "expected": 0 }
+              ]
+            },
+            {
+              "name": "flattenArray",
+              "description": "Flatten nested array one level",
+              "params": [{ "name": "arr", "type": "array" }],
+              "returns": "array",
+              "tests": [
+                { "input": [[[1, 2], [3, 4]]], "expected": [1, 2, 3, 4] },
+                { "input": [[[1], [2], [3]]], "expected": [1, 2, 3] },
+                { "input": [[]], "expected": [] }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "week": 4,
+      "session": 7,
+      "title": "Objects",
+      "path": "week-04/session-07",
+      "files": [
+        {
+          "filename": "objects.js",
+          "functions": [
+            {
+              "name": "createPerson",
+              "description": "Create person object",
+              "params": [
+                { "name": "name", "type": "string" },
+                { "name": "age", "type": "number" },
+                { "name": "city", "type": "string" }
+              ],
+              "returns": "object",
+              "tests": [
+                { "input": ["Alice", 25, "NYC"], "expected": { "name": "Alice", "age": 25, "city": "NYC" } },
+                { "input": ["Bob", 30, "LA"], "expected": { "name": "Bob", "age": 30, "city": "LA" } }
+              ]
+            },
+            {
+              "name": "getProperty",
+              "description": "Get property value from object",
+              "params": [
+                { "name": "obj", "type": "object" },
+                { "name": "key", "type": "string" }
+              ],
+              "returns": "any",
+              "tests": [
+                { "input": [{ "name": "Alice", "age": 25 }, "name"], "expected": "Alice" },
+                { "input": [{ "x": 10 }, "y"], "expected": null }
+              ]
+            },
+            {
+              "name": "hasProperty",
+              "description": "Check if object has property",
+              "params": [
+                { "name": "obj", "type": "object" },
+                { "name": "key", "type": "string" }
+              ],
+              "returns": "boolean",
+              "tests": [
+                { "input": [{ "name": "Alice" }, "name"], "expected": true },
+                { "input": [{ "name": "Alice" }, "age"], "expected": false }
+              ]
+            },
+            {
+              "name": "countKeys",
+              "description": "Count number of keys",
+              "params": [{ "name": "obj", "type": "object" }],
+              "returns": "number",
+              "tests": [
+                { "input": [{ "a": 1, "b": 2, "c": 3 }], "expected": 3 },
+                { "input": [{}], "expected": 0 }
+              ]
+            },
+            {
+              "name": "mergeObjects",
+              "description": "Merge two objects",
+              "params": [
+                { "name": "obj1", "type": "object" },
+                { "name": "obj2", "type": "object" }
+              ],
+              "returns": "object",
+              "tests": [
+                { "input": [{ "a": 1 }, { "b": 2 }], "expected": { "a": 1, "b": 2 } },
+                { "input": [{ "x": 1 }, { "x": 2 }], "expected": { "x": 2 } }
+              ]
+            },
+            {
+              "name": "getKeys",
+              "description": "Get array of object keys",
+              "params": [{ "name": "obj", "type": "object" }],
+              "returns": "array",
+              "tests": [
+                { "input": [{ "name": "Alice", "age": 25 }], "expected": ["name", "age"] },
+                { "input": [{}], "expected": [] }
+              ]
+            },
+            {
+              "name": "getValues",
+              "description": "Get array of object values",
+              "params": [{ "name": "obj", "type": "object" }],
+              "returns": "array",
+              "tests": [
+                { "input": [{ "a": 1, "b": 2 }], "expected": [1, 2] },
+                { "input": [{}], "expected": [] }
+              ]
+            },
+            {
+              "name": "invertObject",
+              "description": "Swap keys and values",
+              "params": [{ "name": "obj", "type": "object" }],
+              "returns": "object",
+              "tests": [
+                { "input": [{ "a": "1", "b": "2" }], "expected": { "1": "a", "2": "b" } }
+              ]
+            },
+            {
+              "name": "filterByValue",
+              "description": "Filter object entries by value type",
+              "params": [
+                { "name": "obj", "type": "object" },
+                { "name": "type", "type": "string" }
+              ],
+              "returns": "object",
+              "tests": [
+                { "input": [{ "a": 1, "b": "two", "c": 3 }, "number"], "expected": { "a": 1, "c": 3 } }
+              ]
+            },
+            {
+              "name": "deepClone",
+              "description": "Create deep copy of object",
+              "params": [{ "name": "obj", "type": "object" }],
+              "returns": "object",
+              "tests": [
+                { "input": [{ "a": { "b": 1 } }], "expected": { "a": { "b": 1 } }, "deepEqual": true }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "week": 4,
+      "session": 8,
+      "title": "Array Methods",
+      "path": "week-04/session-08",
+      "files": [
+        {
+          "filename": "array-methods.js",
+          "functions": [
+            {
+              "name": "doubleNumbers",
+              "description": "Double all numbers using map",
+              "params": [{ "name": "arr", "type": "array" }],
+              "returns": "array",
+              "tests": [
+                { "input": [[1, 2, 3]], "expected": [2, 4, 6] },
+                { "input": [[0, 5]], "expected": [0, 10] }
+              ]
+            },
+            {
+              "name": "getNames",
+              "description": "Extract names from objects using map",
+              "params": [{ "name": "arr", "type": "array" }],
+              "returns": "array",
+              "tests": [
+                { "input": [[{ "name": "Alice" }, { "name": "Bob" }]], "expected": ["Alice", "Bob"] }
+              ]
+            },
+            {
+              "name": "filterAdults",
+              "description": "Filter people age >= 18",
+              "params": [{ "name": "arr", "type": "array" }],
+              "returns": "array",
+              "tests": [
+                { "input": [[{ "name": "A", "age": 20 }, { "name": "B", "age": 15 }]], "expected": [{ "name": "A", "age": 20 }] }
+              ]
+            },
+            {
+              "name": "filterByProperty",
+              "description": "Filter objects by property value",
+              "params": [
+                { "name": "arr", "type": "array" },
+                { "name": "key", "type": "string" },
+                { "name": "value", "type": "any" }
+              ],
+              "returns": "array",
+              "tests": [
+                { "input": [[{ "status": "active" }, { "status": "inactive" }], "status", "active"], "expected": [{ "status": "active" }] }
+              ]
+            },
+            {
+              "name": "findByName",
+              "description": "Find object by name property",
+              "params": [
+                { "name": "arr", "type": "array" },
+                { "name": "name", "type": "string" }
+              ],
+              "returns": "object|null",
+              "tests": [
+                { "input": [[{ "name": "Alice" }, { "name": "Bob" }], "Bob"], "expected": { "name": "Bob" } },
+                { "input": [[{ "name": "Alice" }], "Charlie"], "expected": null }
+              ]
+            },
+            {
+              "name": "findById",
+              "description": "Find object by id property",
+              "params": [
+                { "name": "arr", "type": "array" },
+                { "name": "id", "type": "number" }
+              ],
+              "returns": "object|null",
+              "tests": [
+                { "input": [[{ "id": 1 }, { "id": 2 }], 2], "expected": { "id": 2 } }
+              ]
+            },
+            {
+              "name": "calculateTotal",
+              "description": "Sum price * quantity using reduce",
+              "params": [{ "name": "items", "type": "array" }],
+              "returns": "number",
+              "tests": [
+                { "input": [[{ "price": 10, "quantity": 2 }, { "price": 5, "quantity": 3 }]], "expected": 35 }
+              ]
+            },
+            {
+              "name": "groupBy",
+              "description": "Group objects by property",
+              "params": [
+                { "name": "arr", "type": "array" },
+                { "name": "key", "type": "string" }
+              ],
+              "returns": "object",
+              "tests": [
+                { "input": [[{ "type": "a" }, { "type": "b" }, { "type": "a" }], "type"], "expected": { "a": [{ "type": "a" }, { "type": "a" }], "b": [{ "type": "b" }] } }
+              ]
+            },
+            {
+              "name": "sortByProperty",
+              "description": "Sort objects by numeric property",
+              "params": [
+                { "name": "arr", "type": "array" },
+                { "name": "key", "type": "string" }
+              ],
+              "returns": "array",
+              "tests": [
+                { "input": [[{ "age": 30 }, { "age": 20 }, { "age": 25 }], "age"], "expected": [{ "age": 20 }, { "age": 25 }, { "age": 30 }] }
+              ]
+            },
+            {
+              "name": "pluck",
+              "description": "Extract array of single property values",
+              "params": [
+                { "name": "arr", "type": "array" },
+                { "name": "key", "type": "string" }
+              ],
+              "returns": "array",
+              "tests": [
+                { "input": [[{ "id": 1, "name": "A" }, { "id": 2, "name": "B" }], "id"], "expected": [1, 2] }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "week": 5,
+      "session": 9,
+      "title": "Error Handling",
+      "path": "week-05/session-09",
+      "files": [
+        {
+          "filename": "error-handling.js",
+          "functions": [
+            {
+              "name": "safeDivide",
+              "description": "Divide with zero check",
+              "params": [
+                { "name": "a", "type": "number" },
+                { "name": "b", "type": "number" }
+              ],
+              "returns": "number|Error",
+              "tests": [
+                { "input": [10, 2], "expected": 5 },
+                { "input": [10, 0], "throws": "Cannot divide by zero" }
+              ]
+            },
+            {
+              "name": "parseJSON",
+              "description": "Safely parse JSON string",
+              "params": [{ "name": "str", "type": "string" }],
+              "returns": "object|null",
+              "tests": [
+                { "input": ["{\"a\":1}"], "expected": { "a": 1 } },
+                { "input": ["invalid"], "expected": null }
+              ]
+            },
+            {
+              "name": "validateAge",
+              "description": "Validate age is positive number",
+              "params": [{ "name": "age", "type": "any" }],
+              "returns": "number|Error",
+              "tests": [
+                { "input": [25], "expected": 25 },
+                { "input": [-5], "throws": "Age must be positive" },
+                { "input": ["abc"], "throws": "Age must be a number" }
+              ]
+            },
+            {
+              "name": "validateEmail",
+              "description": "Validate email format",
+              "params": [{ "name": "email", "type": "string" }],
+              "returns": "boolean",
+              "tests": [
+                { "input": ["test@example.com"], "expected": true },
+                { "input": ["invalid"], "expected": false },
+                { "input": [""], "expected": false }
+              ]
+            },
+            {
+              "name": "validatePassword",
+              "description": "Validate password requirements",
+              "params": [{ "name": "password", "type": "string" }],
+              "returns": "object",
+              "tests": [
+                { "input": ["Secure123"], "expected": { "valid": true, "errors": [] } },
+                { "input": ["weak"], "matchesShape": { "valid": false, "errors": "array" } }
+              ]
+            },
+            {
+              "name": "getArrayElement",
+              "description": "Get element with bounds check",
+              "params": [
+                { "name": "arr", "type": "array" },
+                { "name": "index", "type": "number" }
+              ],
+              "returns": "any|Error",
+              "tests": [
+                { "input": [[1, 2, 3], 1], "expected": 2 },
+                { "input": [[1, 2, 3], 10], "throws": "Index out of bounds" }
+              ]
+            },
+            {
+              "name": "requireProperty",
+              "description": "Get required property or throw",
+              "params": [
+                { "name": "obj", "type": "object" },
+                { "name": "key", "type": "string" }
+              ],
+              "returns": "any|Error",
+              "tests": [
+                { "input": [{ "name": "Alice" }, "name"], "expected": "Alice" },
+                { "input": [{}, "name"], "throws": "Property name is required" }
+              ]
+            },
+            {
+              "name": "validateUser",
+              "description": "Validate user object",
+              "params": [{ "name": "user", "type": "object" }],
+              "returns": "object",
+              "tests": [
+                { "input": [{ "name": "Alice", "email": "a@b.com", "age": 25 }], "expected": { "valid": true, "errors": [] } },
+                { "input": [{}], "matchesShape": { "valid": false, "errors": "array" } }
+              ]
+            },
+            {
+              "name": "trySafely",
+              "description": "Execute function with error handling",
+              "params": [
+                { "name": "fn", "type": "function" }
+              ],
+              "returns": "object",
+              "tests": [
+                { "input": ["() => 5"], "expected": { "success": true, "result": 5 } }
+              ]
+            },
+            {
+              "name": "retryOperation",
+              "description": "Retry function up to n times",
+              "params": [
+                { "name": "fn", "type": "function" },
+                { "name": "retries", "type": "number" }
+              ],
+              "returns": "any|Error",
+              "skipAutoTest": true
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "week": 5,
+      "session": 10,
+      "title": "Modules",
+      "path": "week-05/session-10",
+      "files": [
+        {
+          "filename": "math.js",
+          "functions": [
+            {
+              "name": "add",
+              "description": "Add two numbers",
+              "params": [
+                { "name": "a", "type": "number" },
+                { "name": "b", "type": "number" }
+              ],
+              "returns": "number",
+              "tests": [
+                { "input": [2, 3], "expected": 5 }
+              ]
+            },
+            {
+              "name": "subtract",
+              "description": "Subtract b from a",
+              "params": [
+                { "name": "a", "type": "number" },
+                { "name": "b", "type": "number" }
+              ],
+              "returns": "number",
+              "tests": [
+                { "input": [5, 3], "expected": 2 }
+              ]
+            },
+            {
+              "name": "multiply",
+              "description": "Multiply two numbers",
+              "params": [
+                { "name": "a", "type": "number" },
+                { "name": "b", "type": "number" }
+              ],
+              "returns": "number",
+              "tests": [
+                { "input": [4, 5], "expected": 20 }
+              ]
+            },
+            {
+              "name": "divide",
+              "description": "Divide a by b",
+              "params": [
+                { "name": "a", "type": "number" },
+                { "name": "b", "type": "number" }
+              ],
+              "returns": "number|Error",
+              "tests": [
+                { "input": [10, 2], "expected": 5 },
+                { "input": [10, 0], "throws": "Cannot divide by zero" }
+              ]
+            }
+          ]
+        },
+        {
+          "filename": "strings.js",
+          "functions": [
+            {
+              "name": "capitalize",
+              "description": "Capitalize first letter",
+              "params": [{ "name": "str", "type": "string" }],
+              "returns": "string",
+              "tests": [
+                { "input": ["hello"], "expected": "Hello" },
+                { "input": [""], "expected": "" }
+              ]
+            },
+            {
+              "name": "slugify",
+              "description": "Convert to URL slug",
+              "params": [{ "name": "str", "type": "string" }],
+              "returns": "string",
+              "tests": [
+                { "input": ["Hello World"], "expected": "hello-world" },
+                { "input": ["JavaScript  Rocks!"], "expected": "javascript-rocks" }
+              ]
+            },
+            {
+              "name": "truncate",
+              "description": "Truncate string with ellipsis",
+              "params": [
+                { "name": "str", "type": "string" },
+                { "name": "length", "type": "number" }
+              ],
+              "returns": "string",
+              "tests": [
+                { "input": ["Hello World", 5], "expected": "Hello..." },
+                { "input": ["Hi", 10], "expected": "Hi" }
+              ]
+            }
+          ]
+        },
+        {
+          "filename": "arrays.js",
+          "functions": [
+            {
+              "name": "chunk",
+              "description": "Split array into chunks",
+              "params": [
+                { "name": "arr", "type": "array" },
+                { "name": "size", "type": "number" }
+              ],
+              "returns": "array",
+              "tests": [
+                { "input": [[1, 2, 3, 4, 5], 2], "expected": [[1, 2], [3, 4], [5]] }
+              ]
+            },
+            {
+              "name": "shuffle",
+              "description": "Randomly shuffle array",
+              "params": [{ "name": "arr", "type": "array" }],
+              "returns": "array",
+              "skipAutoTest": true
+            },
+            {
+              "name": "unique",
+              "description": "Return unique values",
+              "params": [{ "name": "arr", "type": "array" }],
+              "returns": "array",
+              "tests": [
+                { "input": [[1, 2, 2, 3, 3]], "expected": [1, 2, 3] }
+              ]
+            }
+          ]
+        },
+        {
+          "filename": "validators.js",
+          "functions": [
+            {
+              "name": "isEmail",
+              "description": "Validate email format",
+              "params": [{ "name": "str", "type": "string" }],
+              "returns": "boolean",
+              "tests": [
+                { "input": ["test@example.com"], "expected": true },
+                { "input": ["invalid"], "expected": false }
+              ]
+            },
+            {
+              "name": "isURL",
+              "description": "Validate URL format",
+              "params": [{ "name": "str", "type": "string" }],
+              "returns": "boolean",
+              "tests": [
+                { "input": ["https://example.com"], "expected": true },
+                { "input": ["not a url"], "expected": false }
+              ]
+            },
+            {
+              "name": "isStrongPassword",
+              "description": "Check password strength",
+              "params": [{ "name": "str", "type": "string" }],
+              "returns": "boolean",
+              "tests": [
+                { "input": ["Secure123!"], "expected": true },
+                { "input": ["weak"], "expected": false }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "apiAssignments": [
+    {
+      "week": 6,
+      "session": 12,
+      "title": "Express Intro - Book API",
+      "path": "week-06/session-12",
+      "endpoints": [
+        {
+          "method": "GET",
+          "path": "/api/books",
+          "description": "Get all books",
+          "response": { "status": 200, "type": "array" }
+        },
+        {
+          "method": "GET",
+          "path": "/api/books/:id",
+          "description": "Get book by ID",
+          "response": { "status": 200, "type": "object" },
+          "errorResponses": [{ "status": 404, "condition": "not found" }]
+        },
+        {
+          "method": "POST",
+          "path": "/api/books",
+          "description": "Create book",
+          "body": { "title": "string", "author": "string" },
+          "response": { "status": 201, "type": "object" }
+        },
+        {
+          "method": "PUT",
+          "path": "/api/books/:id",
+          "description": "Update book",
+          "response": { "status": 200, "type": "object" }
+        },
+        {
+          "method": "DELETE",
+          "path": "/api/books/:id",
+          "description": "Delete book",
+          "response": { "status": 200 }
+        }
+      ]
+    },
+    {
+      "week": 8,
+      "session": 16,
+      "title": "Mongoose CRUD - User API",
+      "path": "week-08/session-16",
+      "endpoints": [
+        {
+          "method": "POST",
+          "path": "/api/users",
+          "description": "Create user with Mongoose",
+          "body": { "name": "string", "email": "string", "age": "number" },
+          "response": { "status": 201 }
+        },
+        {
+          "method": "GET",
+          "path": "/api/users",
+          "description": "Get all users with pagination",
+          "queryParams": ["page", "limit"],
+          "response": { "status": 200, "type": "array" }
+        },
+        {
+          "method": "GET",
+          "path": "/api/users/:id",
+          "description": "Get user by ID",
+          "response": { "status": 200 }
+        },
+        {
+          "method": "PATCH",
+          "path": "/api/users/:id",
+          "description": "Update user",
+          "response": { "status": 200 }
+        },
+        {
+          "method": "DELETE",
+          "path": "/api/users/:id",
+          "description": "Delete user",
+          "response": { "status": 200 }
+        }
+      ]
+    },
+    {
+      "week": 9,
+      "session": 18,
+      "title": "JWT Authentication",
+      "path": "week-09/session-18",
+      "endpoints": [
+        {
+          "method": "POST",
+          "path": "/api/auth/register",
+          "description": "Register new user",
+          "body": { "name": "string", "email": "string", "password": "string" },
+          "response": { "status": 201, "contains": ["user", "token"] }
+        },
+        {
+          "method": "POST",
+          "path": "/api/auth/login",
+          "description": "Login user",
+          "body": { "email": "string", "password": "string" },
+          "response": { "status": 200, "contains": ["user", "token"] }
+        },
+        {
+          "method": "GET",
+          "path": "/api/auth/me",
+          "description": "Get current user (protected)",
+          "requiresAuth": true,
+          "response": { "status": 200 },
+          "errorResponses": [{ "status": 401, "condition": "no token" }]
+        }
+      ]
+    },
+    {
+      "week": 10,
+      "session": 19,
+      "title": "Authorization & Roles",
+      "path": "week-10/session-19",
+      "endpoints": [
+        {
+          "method": "GET",
+          "path": "/api/admin/users",
+          "description": "Admin only - list all users",
+          "requiresAuth": true,
+          "requiresRole": "admin",
+          "response": { "status": 200 },
+          "errorResponses": [
+            { "status": 401, "condition": "no auth" },
+            { "status": 403, "condition": "not admin" }
+          ]
+        },
+        {
+          "method": "PATCH",
+          "path": "/api/users/:id",
+          "description": "Update own profile only",
+          "requiresAuth": true,
+          "requiresOwnership": true,
+          "response": { "status": 200 },
+          "errorResponses": [
+            { "status": 403, "condition": "not owner" }
+          ]
+        }
+      ]
+    }
+  ],
+  "grading": {
+    "functionTests": {
+      "pointsPerTest": 1,
+      "timeout": 2000,
+      "sandbox": true
+    },
+    "apiTests": {
+      "pointsPerEndpoint": 2,
+      "timeout": 5000
+    }
+  }
+}
