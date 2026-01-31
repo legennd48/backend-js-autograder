@@ -51,20 +51,56 @@ function GradePageContent() {
   const [error, setError] = useState('');
 
   useEffect(() => {
-    Promise.all([
-      fetch('/api/students').then(r => r.json()),
-      fetch('/api/assignments').then(r => r.json())
-    ]).then(([studentsData, assignmentsData]) => {
-      setStudents(studentsData);
-      setAssignments(assignmentsData);
-      if (preselectedStudent) {
-        setSelectedStudent(preselectedStudent);
+    const load = async () => {
+      setLoading(true);
+      setError('');
+
+      try {
+        const [studentsRes, assignmentsRes] = await Promise.all([
+          fetch('/api/students'),
+          fetch('/api/assignments')
+        ]);
+
+        const [studentsJson, assignmentsJson] = await Promise.all([
+          studentsRes.json(),
+          assignmentsRes.json()
+        ]);
+
+        if (!studentsRes.ok) {
+          throw new Error(studentsJson?.error || 'Failed to load students');
+        }
+        if (!assignmentsRes.ok) {
+          throw new Error(assignmentsJson?.error || 'Failed to load assignments');
+        }
+
+        const studentsList: Student[] = Array.isArray(studentsJson)
+          ? studentsJson
+          : Array.isArray(studentsJson?.students)
+            ? studentsJson.students
+            : [];
+
+        const assignmentsList: Assignment[] = Array.isArray(assignmentsJson)
+          ? assignmentsJson
+          : Array.isArray(assignmentsJson?.assignments)
+            ? assignmentsJson.assignments
+            : [];
+
+        setStudents(studentsList);
+        setAssignments(assignmentsList);
+
+        if (preselectedStudent) {
+          setSelectedStudent(preselectedStudent);
+        }
+      } catch (e: any) {
+        setStudents([]);
+        setAssignments([]);
+        setError(e?.message || 'Failed to load data');
+      } finally {
+        setLoading(false);
       }
-      setLoading(false);
-    }).catch(() => {
-      setError('Failed to load data');
-      setLoading(false);
-    });
+    };
+
+    void load();
   }, [preselectedStudent]);
 
   const handleGrade = async () => {
