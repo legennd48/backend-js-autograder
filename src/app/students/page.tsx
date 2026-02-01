@@ -19,6 +19,9 @@ export default function StudentsPage() {
   const [students, setStudents] = useState<Student[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [testEmailTo, setTestEmailTo] = useState('');
+  const [sendingTestEmail, setSendingTestEmail] = useState(false);
+  const [testEmailStatus, setTestEmailStatus] = useState<{ ok: boolean; message: string } | null>(null);
   const [showForm, setShowForm] = useState(false);
   const [formData, setFormData] = useState({
     name: '',
@@ -90,6 +93,31 @@ export default function StudentsPage() {
     }
   };
 
+  const sendTestEmail = async () => {
+    setSendingTestEmail(true);
+    setTestEmailStatus(null);
+    setError('');
+
+    try {
+      const res = await fetch('/api/email/test', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ to: testEmailTo })
+      });
+      const data = await res.json();
+
+      if (res.ok) {
+        setTestEmailStatus({ ok: true, message: data.message || 'Test email sent' });
+      } else {
+        setTestEmailStatus({ ok: false, message: data.error || 'Failed to send test email' });
+      }
+    } catch (err) {
+      setTestEmailStatus({ ok: false, message: 'Failed to send test email' });
+    } finally {
+      setSendingTestEmail(false);
+    }
+  };
+
   if (loading) {
     return (
       <div className="flex items-center justify-center h-64">
@@ -120,6 +148,47 @@ export default function StudentsPage() {
           <p className="text-red-800">{error}</p>
         </div>
       )}
+
+      {/* Email Test */}
+      <div className="bg-white rounded-lg shadow p-6">
+        <div className="flex items-start justify-between gap-4 flex-col md:flex-row">
+          <div>
+            <h2 className="text-lg font-semibold text-gray-900">Email Test</h2>
+            <p className="text-sm text-gray-600 mt-1">
+              Send a test email to confirm Gmail SMTP is configured. Grade emails are queued and sent by a cron processor in production.
+            </p>
+          </div>
+
+          <div className="w-full md:w-auto flex flex-col md:flex-row gap-2 md:items-center">
+            <input
+              type="email"
+              value={testEmailTo}
+              onChange={(e) => setTestEmailTo(e.target.value)}
+              placeholder="recipient@example.com"
+              className="w-full md:w-72 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            />
+            <button
+              onClick={sendTestEmail}
+              disabled={sendingTestEmail || !testEmailTo}
+              className="inline-flex justify-center items-center px-4 py-2 rounded-md text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {sendingTestEmail ? 'Sending...' : 'Send Test Email'}
+            </button>
+          </div>
+        </div>
+
+        {testEmailStatus && (
+          <div
+            className={`mt-4 rounded-md p-3 border ${
+              testEmailStatus.ok
+                ? 'bg-green-50 border-green-200 text-green-800'
+                : 'bg-red-50 border-red-200 text-red-800'
+            }`}
+          >
+            {testEmailStatus.message}
+          </div>
+        )}
+      </div>
 
       {/* Add Student Form */}
       {showForm && (

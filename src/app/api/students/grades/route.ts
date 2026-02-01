@@ -51,16 +51,18 @@ export async function GET(request: NextRequest) {
           const maxScore = Number(submission.maxScore || 0);
           const percentage = maxScore > 0 ? Math.round((score / maxScore) * 100) : 0;
 
-          let status: 'passed' | 'failed' | 'error' = 'failed';
-          if (submission.status === 'error') status = 'error';
-          else if (submission.status === 'completed') {
-            status = percentage === 100 ? 'passed' : 'failed';
-          }
+          if (submission.status === 'completed') {
+            const status: 'passed' | 'failed' = percentage === 100 ? 'passed' : 'failed';
+            grades[assignmentKey] = { status, score, maxScore, percentage };
 
-          grades[assignmentKey] = { status, score, maxScore, percentage };
-          totalScore += score;
-          totalMaxScore += maxScore;
-          completedCount++;
+            totalScore += score;
+            totalMaxScore += maxScore;
+            completedCount++;
+          } else if (submission.status === 'error') {
+            grades[assignmentKey] = { status: 'error', score, maxScore, percentage };
+          } else {
+            grades[assignmentKey] = { status: 'not-graded', score: 0, maxScore: 0, percentage: 0 };
+          }
         } else {
           grades[assignmentKey] = { status: 'not-graded', score: 0, maxScore: 0, percentage: 0 };
         }

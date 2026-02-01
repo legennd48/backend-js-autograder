@@ -23,11 +23,12 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
 
     // Get submission stats
     const submissions = await Submission.find({ studentId: id });
+    const completedSubmissions = submissions.filter((s) => s.status === 'completed');
     const stats = {
       totalSubmissions: submissions.length,
-      completedAssignments: submissions.filter(s => s.status === 'completed').length,
-      totalScore: submissions.reduce((sum, s) => sum + s.score, 0),
-      totalMaxScore: submissions.reduce((sum, s) => sum + s.maxScore, 0)
+      completedAssignments: completedSubmissions.length,
+      totalScore: completedSubmissions.reduce((sum, s) => sum + s.score, 0),
+      totalMaxScore: completedSubmissions.reduce((sum, s) => sum + s.maxScore, 0)
     };
 
     return NextResponse.json({

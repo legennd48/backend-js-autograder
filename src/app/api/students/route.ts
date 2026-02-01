@@ -18,8 +18,16 @@ export async function GET() {
               $cond: [{ $eq: ['$status', 'completed'] }, 1, 0]
             }
           },
-          totalScore: { $sum: '$score' },
-          totalMaxScore: { $sum: '$maxScore' }
+          completedScore: {
+            $sum: {
+              $cond: [{ $eq: ['$status', 'completed'] }, '$score', 0]
+            }
+          },
+          completedMaxScore: {
+            $sum: {
+              $cond: [{ $eq: ['$status', 'completed'] }, '$maxScore', 0]
+            }
+          }
         }
       }
     ]);
@@ -30,8 +38,8 @@ export async function GET() {
 
     const withStats = students.map((student: any) => {
       const stats = byStudentId.get(String(student._id));
-      const totalMaxScore = Number(stats?.totalMaxScore || 0);
-      const totalScore = Number(stats?.totalScore || 0);
+      const totalMaxScore = Number(stats?.completedMaxScore || 0);
+      const totalScore = Number(stats?.completedScore || 0);
       const averageScore = totalMaxScore > 0
         ? Math.round((totalScore / totalMaxScore) * 100)
         : 0;

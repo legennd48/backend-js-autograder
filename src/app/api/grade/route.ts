@@ -4,6 +4,9 @@ import { Student, Submission } from '@/lib/models';
 import { checkGitHubPathExists, fetchGitHubFile, checkRepoExists } from '@/lib/github';
 import { gradeAssignment, GradeResult } from '@/lib/grader';
 import { getApiAssignment, getAssignment, getRepoCheckAssignment, specs } from '@/lib/specs';
+import { enqueueGradeReportEmail } from '@/lib/emailOutbox';
+
+export const runtime = 'nodejs';
 
 // POST /api/grade - Grade a student's assignment
 export async function POST(request: NextRequest) {
@@ -163,6 +166,15 @@ export async function POST(request: NextRequest) {
         submission.results = allResults;
         await submission.save();
 
+        try {
+          await enqueueGradeReportEmail({
+            student: { _id: student._id, name: student.name, email: student.email },
+            submission
+          });
+        } catch (err) {
+          console.error('Grade email enqueue failed', err);
+        }
+
         return NextResponse.json({
           message: 'Grading complete',
           submission: {
@@ -205,6 +217,15 @@ export async function POST(request: NextRequest) {
         submission.maxScore = totalMaxScore;
         submission.results = allResults;
         await submission.save();
+
+        try {
+          await enqueueGradeReportEmail({
+            student: { _id: student._id, name: student.name, email: student.email },
+            submission
+          });
+        } catch (err) {
+          console.error('Grade email enqueue failed', err);
+        }
 
         return NextResponse.json({
           message: 'Grading complete',
@@ -268,6 +289,15 @@ export async function POST(request: NextRequest) {
       submission.maxScore = totalMaxScore;
       submission.results = allResults;
       await submission.save();
+
+      try {
+        await enqueueGradeReportEmail({
+          student: { _id: student._id, name: student.name, email: student.email },
+          submission
+        });
+      } catch (err) {
+        console.error('Grade email enqueue failed', err);
+      }
 
       return NextResponse.json({
         message: 'Grading complete',
