@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <title>Academic Cap</title>
+  <rect width="64" height="64" rx="8" fill="#0f172a"/>
+  <g transform="translate(8,8)">
+    <path d="M24 6L0 14l24 8 24-8L24 6z" fill="#f8fafc"/>
+    <path d="M18 20v8c0 4 6 6 6 6s6-2 6-6v-8" fill="#0f172a"/>
+    <circle cx="34" cy="26" r="2" fill="#f59e0b"/>
+    <path d="M24 30v12" stroke="#f8fafc" stroke-width="2" stroke-linecap="round"/>
+  </g>
+</svg>

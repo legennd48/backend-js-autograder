@@ -4,6 +4,9 @@ import './globals.css';
 export const metadata: Metadata = {
   title: 'Backend JS Auto-Grader',
   description: 'Automatic grading system for Backend JavaScript course assignments',
+  icons: {
+    icon: '/favicon.svg'
+  }
 };
 
 export default function RootLayout({
@@ -39,6 +42,9 @@ export default function RootLayout({
                   </a>
                   <a href="/history" className="text-gray-600 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium">
                     History
+                  </a>
+                  <a href="/outbox" className="text-gray-600 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium">
+                    Outbox
                   </a>
                 </div>
               </div>

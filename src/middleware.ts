@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getAuthCookieName, verifyAuthToken } from '@/lib/auth';
 
 const PUBLIC_PATH_PREFIXES = ['/_next', '/favicon.ico'];
-const PUBLIC_ROUTES = ['/login'];
+const PUBLIC_ROUTES = ['/', '/login'];
 const PUBLIC_API_PREFIXES = ['/api/auth', '/api/cron'];
 
 export async function middleware(request: NextRequest) {

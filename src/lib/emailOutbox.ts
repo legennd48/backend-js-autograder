@@ -196,10 +196,27 @@ async function buildGradeReportEmail(params: { student: IStudent; submission: IS
 }
 
 export async function processEmailOutboxBatch(params: { limit?: number }) {
+  let emailEnabled = false;
+  try {
+    emailEnabled = getEmailConfig().enabled;
+  } catch (error: any) {
+    return {
+      claimed: 0,
+      sent: 0,
+      retried: 0,
+      canceled: 0,
+      error: error?.message || 'email-config-error'
+    };
+  }
+
+  if (!emailEnabled) {
+    return { claimed: 0, sent: 0, retried: 0, canceled: 0, error: 'email-disabled' };
+  }
+
   const limit = Math.max(1, Math.min(100, Number(params.limit || 20)));
   const now = new Date();
 
-  const summary = {
+  const summary: any = {
     claimed: 0,
     sent: 0,
     retried: 0,
