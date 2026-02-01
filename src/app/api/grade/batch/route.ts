@@ -39,7 +39,13 @@ export async function POST(request: NextRequest) {
       const apiAssignment = getApiAssignment(week, session);
       if (apiAssignment) {
         return NextResponse.json(
-          { error: 'API assignment auto-grading is not implemented yet.' },
+          {
+            error:
+              'Batch grading is not implemented for API assignments yet. Select a function or repo-check assignment.',
+            type: 'api',
+            week,
+            session
+          },
           { status: 501 }
         );
       }
@@ -62,8 +68,11 @@ export async function POST(request: NextRequest) {
     const results: GradeResultItem[] = [];
 
     for (const student of students) {
+      const studentId =
+        (student as any)?._id?.toString?.() ?? String((student as any)?._id ?? '');
+
       const studentResult: GradeResultItem = {
-        studentId: student._id.toString(),
+        studentId,
         studentName: student.name,
         githubUsername: student.githubUsername,
         status: 'error',

@@ -127,6 +127,9 @@ export default function AssignmentsPage() {
     }
   };
 
+  const selectedIsApiAssignment =
+    selectedAssignment?.type === 'api' || !!selectedAssignment?.endpoints;
+
   // Group assignments by week
   const groupedByWeek = assignments.reduce((acc, assignment) => {
     const week = assignment.week;
@@ -342,7 +345,7 @@ export default function AssignmentsPage() {
                 <div className="border-t pt-4 space-y-4">
                   <button
                     onClick={gradeAllStudents}
-                    disabled={batchGrading}
+                    disabled={batchGrading || selectedIsApiAssignment}
                     className="w-full inline-flex justify-center items-center px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     {batchGrading ? (
@@ -354,9 +357,16 @@ export default function AssignmentsPage() {
                         Grading All Students...
                       </>
                     ) : (
-                      'Grade All Students'
+                      selectedIsApiAssignment ? 'API Auto-Grading Not Available' : 'Grade All Students'
                     )}
                   </button>
+
+                  {selectedIsApiAssignment && (
+                    <div className="text-xs text-gray-600 bg-gray-50 border border-gray-200 rounded p-3">
+                      This is an API assignment. Batch auto-grading isn’t implemented yet.
+                      Choose a function or repo-check assignment to use batch grading.
+                    </div>
+                  )}
 
                   {/* Batch grading results */}
                   {batchResults && (
